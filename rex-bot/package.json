@@ -1,0 +1,17 @@
+{
+  "name": "rex-bot",
+  "version": "1.0.0",
+  "description": "Rex — meeting agent Slack bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "brief": "node morning-brief.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@slack/bolt": "^4.0.0",
+    "@slack/web-api": "^7.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

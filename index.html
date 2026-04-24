@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>digi — Pedro's Agent System</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #161616;
+      --border:    #252525;
+      --text:      #e8e8e8;
+      --muted:     #777;
+      --mono:      "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+      --joe:   #5aad7f;
+      --matt:  #5588cc;
+      --mimi:  #cc8866;
+      --tai:   #f07030;
+      --luna:  #9966dd;
+      --rex:   #33aacc;
+    }
+
+    html { font-size: 15px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.65;
+      padding: 0 20px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Layout ── */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 64px 0 100px;
+    }
+
+    /* ── Header ── */
+    header {
+      margin-bottom: 56px;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    header p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    /* ── Section headings ── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    section { margin-bottom: 64px; }
+
+    /* ── Agent grid ── */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 620px) {
+      .agent-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 1.8rem; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 20px 22px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .cmd {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      color: var(--accent);
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .card-domain {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* Per-agent accent colour */
+    .joe  { --accent: var(--joe);  }
+    .matt { --accent: var(--matt); }
+    .mimi { --accent: var(--mimi); }
+    .tai  { --accent: var(--tai);  }
+    .luna { --accent: var(--luna); }
+    .rex  { --accent: var(--rex);  }
+
+    /* ── How to invoke ── */
+    .invoke-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px 28px;
+    }
+
+    .invoke-block p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .invoke-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .invoke-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.88rem;
+    }
+
+    .invoke-list .badge {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 2px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .invoke-list .desc {
+      color: var(--muted);
+      padding-top: 1px;
+    }
+
+    /* ── Collaboration ── */
+    .collab-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .collab-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      font-size: 0.9rem;
+    }
+
+    .collab-who {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      min-width: 52px;
+      text-align: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .collab-text { color: var(--muted); line-height: 1.55; }
+    .collab-text strong { color: var(--text); font-weight: 500; }
+
+    /* ── Principles ── */
+    .principles {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .principle {
+      display: flex;
+      gap: 16px;
+      font-size: 0.9rem;
+    }
+
+    .principle-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .principle-text { color: var(--muted); line-height: 1.55; }
+    .principle-text strong { color: var(--text); font-weight: 500; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <div class="wordmark">~/digi</div>
+      <h1>Pedro's Personal Agent System</h1>
+      <p>A crew of AI personas that work together to support daily work — knowledge, career, code, design, and meetings. Each has a name, a domain, and a distinct voice.</p>
+    </header>
+
+    <!-- Agents -->
+    <section>
+      <div class="section-label">The crew</div>
+      <div class="agent-grid">
+
+        <div class="card joe">
+          <div class="card-header">
+            <h2>Joe</h2>
+            <span class="cmd">/joe</span>
+          </div>
+          <div class="card-domain">Second brain</div>
+          <p>Searches, writes, and organises notes in the Obsidian vault. Surfaces unexpected connections. Calm, curious, and precise — a librarian who actually reads the books.</p>
+        </div>
+
+        <div class="card matt">
+          <div class="card-header">
+            <h2>Matt</h2>
+            <span class="cmd">/matt</span>
+          </div>
+          <div class="card-domain">Company knowledge</div>
+          <p>Navigates Confluence to find specs, architecture docs, and internal processes. Honest when docs are stale or missing. Methodical, dry, thorough.</p>
+        </div>
+
+        <div class="card mimi">
+          <div class="card-header">
+            <h2>Mimi</h2>
+            <span class="cmd">/mimi</span>
+          </div>
+          <div class="card-domain">Career engine</div>
+          <p>Prepares 1:1 agendas, tracks PDP goals, writes post-meeting notes, generates new PDPs. Warm, structured, and honest — won't just tell you what you want to hear.</p>
+        </div>
+
+        <div class="card tai">
+          <div class="card-header">
+            <h2>Tai</h2>
+            <span class="cmd">/tai</span>
+          </div>
+          <div class="card-domain">Engineering</div>
+          <p>Code review, implementation, architecture analysis, debugging. Reads existing patterns before touching anything. Pragmatic, direct, no patience for over-engineering.</p>
+        </div>
+
+        <div class="card luna">
+          <div class="card-header">
+            <h2>Luna</h2>
+            <span class="cmd">/luna</span>
+          </div>
+          <div class="card-domain">Design partner</div>
+          <p>Works from images and references to analyse visual direction, make design decisions, and brief Tai. Reviews output against visual intent. Specific and opinionated — never vague.</p>
+        </div>
+
+        <div class="card rex">
+          <div class="card-header">
+            <h2>Rex</h2>
+            <span class="cmd">/rex</span>
+          </div>
+          <div class="card-domain">Meetings</div>
+          <p>Searches Outlook, briefs meetings, writes notes into Obsidian, catches up on missed meetings via Teams transcripts. Terse and factual — gets in, gets the info, gets out.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- How to invoke -->
+    <section>
+      <div class="section-label">How to invoke</div>
+      <div class="invoke-block">
+        <p>Every persona is a Claude Code skill. Invoke them from any Claude Code session with their slash command.</p>
+        <ul class="invoke-list">
+          <li>
+            <span class="badge" style="background: color-mix(in srgb, var(--joe) 14%, transparent); color: var(--joe);">/joe</span>
+            <span class="desc">Ask about notes, search the vault, capture something new, connect ideas</span>
+          </li>
+          <li>
+            <span class="badge" style="background: color-mix(in srgb, var(--matt) 14%, transparent); color: var(--matt);">/matt</span>
+            <span class="desc">Find a Confluence page, look up a spec, check internal docs</span>
+          </li>
+          <li>
+            <span class="badge" style="background: color-mix(in srgb, var(--mimi) 14%, transparent); color: var(--mimi);">/mimi</span>
+            <span class="desc">Prep a 1:1, review PDP goals, write post-meeting notes</span>
+          </li>
+          <li>
+            <span class="badge" style="background: color-mix(in srgb, var(--tai) 14%, transparent); color: var(--tai);">/tai</span>
+            <span class="desc">Review code, implement a component, debug, analyse architecture</span>
+          </li>
+          <li>
+            <span class="badge" style="background: color-mix(in srgb, var(--luna) 14%, transparent); color: var(--luna);">/luna</span>
+            <span class="desc">Analyse a design reference, explore a visual direction, review UI code</span>
+          </li>
+          <li>
+            <span class="badge" style="background: color-mix(in srgb, var(--rex) 14%, transparent); color: var(--rex);">/rex</span>
+            <span class="desc">Get today's meetings, brief an upcoming call, catch up on a missed one</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Collaboration -->
+    <section>
+      <div class="section-label">How they work together</div>
+      <div class="collab-list">
+        <div class="collab-item">
+          <span class="collab-who" style="background: color-mix(in srgb, var(--luna) 14%, transparent); color: var(--luna);">Luna</span>
+          <span class="collab-text">defines the visual direction and produces a structured brief → <strong>Tai</strong> implements it faithfully → <strong>Luna</strong> reviews the output against the spec</span>
+        </div>
+        <div class="collab-item">
+          <span class="collab-who" style="background: color-mix(in srgb, var(--tai) 14%, transparent); color: var(--tai);">Tai</span>
+          <span class="collab-text">pulls in <strong>Joe</strong> for vault context before building, and <strong>Matt</strong> to check if a feature is already specced in Confluence</span>
+        </div>
+        <div class="collab-item">
+          <span class="collab-who" style="background: color-mix(in srgb, var(--mimi) 14%, transparent); color: var(--mimi);">Mimi</span>
+          <span class="collab-text">reads the vault via <strong>Joe</strong> before a 1:1 to surface recent notes, decisions, and in-progress threads that belong in the agenda</span>
+        </div>
+        <div class="collab-item">
+          <span class="collab-who" style="background: color-mix(in srgb, var(--rex) 14%, transparent); color: var(--rex);">Rex</span>
+          <span class="collab-text">writes meeting briefs and post-meeting notes directly into Obsidian, feeding the memory layer that <strong>Joe</strong> and <strong>Mimi</strong> draw from later</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Principles -->
+    <section>
+      <div class="section-label">Design principles</div>
+      <div class="principles">
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text"><strong>Personas, not tools.</strong> Each agent has a name, a voice, and a personality. They open every response with a callout so it's always clear who's talking.</div>
+        </div>
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text"><strong>Scoped tools.</strong> Each persona only has access to the tools relevant to its domain — no overlap, no confusion.</div>
+        </div>
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text"><strong>Collaborative.</strong> Personas know about each other and defer when appropriate — Tai reads specs before building, Luna briefs Tai before designing.</div>
+        </div>
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text"><strong>Honest.</strong> If something isn't in the vault or isn't in Confluence, they say so rather than guessing.</div>
+        </div>
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text"><strong>Expandable.</strong> New personas can be added as new domains emerge — create a <code style="font-family: var(--mono); font-size: 0.85em; color: var(--text);">skills/&lt;name&gt;/SKILL.md</code>, add the symlink, done.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>github.com/pedroferreira4/digi</span>
+      <span>skills are symlinked from ~/Documents/Projetos/digi/skills/</span>
+    </footer>
+
+  </div>
+</body>
+</html>

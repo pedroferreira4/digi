@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.digi.rex.bot</string>
+
+  <!-- Use login shell so nvm + correct node are available -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>cd /Users/pedro.ferreira4/Documents/Projetos/digi/rex-bot && node index.js</string>
+  </array>
+
+  <!-- Start on login, restart automatically if it crashes -->
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/rex-bot.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/rex-bot.error.log</string>
+</dict>
+</plist>
