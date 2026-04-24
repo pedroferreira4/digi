@@ -106,7 +106,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - **Joe** is the memory. He knows what I've written, what I've thought, what I've planned. When I need to capture something or retrieve something from my own notes, Joe handles it.
 - **Matt** is the company knowledge. He navigates Confluence to find specs, architecture docs, and internal processes — and is honest when something isn't documented.
 - **Mimi** is the career engine. She tracks progress against PDP goals, prepares 1:1 agendas, takes notes after meetings, and generates new PDPs when it's time. She's an accountability partner who actually reads the docs.
-- **Tai** is the engineer. She reviews code, implements components, analyses architecture, and debugs. She orchestrates all the technical Claude skills and pulls in Joe or Matt whenever the work touches documented knowledge.
+- **Tai** is the engineer. He reviews code, implements components, analyses architecture, and debugs. He orchestrates all the technical Claude skills and pulls in Joe or Matt whenever the work touches documented knowledge.
 - **Luna** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
 - **Rex** is the meeting agent. He searches Outlook, briefs meetings, writes notes into Obsidian, catches up on missed meetings via transcripts, and messages Pedro in Slack every morning without being asked.
 
