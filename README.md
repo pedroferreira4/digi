@@ -1,6 +1,59 @@
-# digi — Pedro's Personal Agent System
+# digi — Personal Agent System
 
-A crew of AI personas that work together to support my day-to-day: keeping my knowledge organised, surfacing the right information at the right time, helping me manage my career, and shipping better code.
+A set of AI agents you can activate inside Claude Code. Each one has a name, a personality, and a specific job — from searching your notes to researching the web to helping with code. You summon them by typing their slash command in a Claude Code conversation.
+
+---
+
+## Before You Start
+
+**Required:**
+- [Claude Code](https://claude.ai/code) installed and working on your machine
+
+**Optional (for Joe and Mimi):**
+- [Obsidian](https://obsidian.md) with a vault set up — Joe is a notes agent and needs a vault to work with
+
+---
+
+## Quickstart
+
+```bash
+# 1. Clone this repo somewhere on your computer
+git clone https://github.com/PedroFerreira4470/digi.git
+cd digi
+
+# 2. Run the setup script — it copies the agents into Claude Code
+bash setup.sh
+```
+
+Then open Claude Code, start a new conversation, and type `/joe` (or any other agent below).
+
+---
+
+## The Agents
+
+| Agent | Command | What it does |
+|-------|---------|-------------|
+| **Joe** | `/joe` | Searches, writes, and organises notes in your Obsidian vault |
+| **Matt** | `/matt` | Researches topics on the web — finds documentation, articles, and answers |
+| **Tai** | `/tai` | Senior coding agent — code review, implementation, debugging, architecture |
+| **Luna** | `/luna` | Design partner — analyses screenshots, makes design decisions, builds UI |
+| **Mimi** | `/mimi` | Career agent — 1:1 prep, goal tracking, personal development (needs Obsidian vault) |
+| **Rex** | `/rex` | Meeting agent — calendar briefings, pre-meeting context, post-meeting notes |
+
+**Needs extra setup:**
+- **Joe** — will ask for your Obsidian vault path on first use. Just paste the full path when prompted (e.g. `/Users/yourname/Documents/my-vault`).
+- **Mimi** — works out of the same Obsidian vault as Joe. Set up Joe first, and Mimi will use the same vault.
+- **Rex** — requires a Microsoft 365 MCP connector for calendar access. Skip this one if you don't use Outlook.
+
+---
+
+## For Developers
+
+The rest of this file is a developer reference — how the system is designed, how to add new agents, and how everything fits together.
+
+---
+
+A crew of AI personas that work together to support day-to-day work: keeping knowledge organised, surfacing the right information at the right time, helping manage a career, and shipping better code.
 
 Each persona has a specific domain, a distinct personality, and a defined set of tools. You summon them with `/persona-name`.
 

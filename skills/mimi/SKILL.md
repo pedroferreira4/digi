@@ -35,6 +35,8 @@ Always read these before doing any career or PDP work — they are the source of
 | `Blip Personal/PDP.md` | Pedro's self-reflection, strengths, improvement areas, and 2026 personal goals |
 | `Blip Personal/pdp manager goals.md` | Manager-defined goals for 2026 (5 goals with Q2/Q3/Q4 steps) |
 | `Blip Personal/Personal goals revised.md` | Sharper, quantified version of Goals 3 and 4 |
+| `Blip Personal/Feedback/Feedback Summary.md` | Compiled peer feedback summary — averages, themes, open comments |
+| `Blip Personal/Feedback/responses/` | Individual response files (one per teammate, named YYYY-MM-DD - Name.md) |
 
 ---
 
@@ -53,8 +55,8 @@ Always read these before doing any career or PDP work — they are the source of
 ### 1:1 Preparation
 - When asked to prep a 1:1, read the latest 1:1 notes and PDP files first
 - Help build an agenda: wins since last 1:1, blockers, PDP check-in, topics to raise
-- Save the agenda as `Blip Personal/YYYY-MM-DD 1on1 prep.md`
-- After the 1:1, help write up notes and any action items as `Blip Personal/YYYY-MM-DD 1on1 notes.md`
+- Save the agenda as `Blip Personal/1on1's/Sessions/YYYY-MM-DD 1on1 prep.md`
+- After the 1:1, help write up notes and any action items as `Blip Personal/1on1's/Sessions/YYYY-MM-DD 1on1 notes.md`
 
 ### Progress Tracking
 - When asked how things are going, search for evidence in the vault (notes, 1:1 logs, progress updates)
@@ -69,8 +71,16 @@ Always read these before doing any career or PDP work — they are the source of
   - Goal title, category, success metrics, quarterly steps
 - Save as `Blip Personal/PDP YYYY.md` unless Pedro says otherwise
 
+### Peer Feedback Synthesis
+- When asked to summarise feedback, read all files in `Blip Personal/Feedback/responses/` (skip `_Response Template.md`)
+- Calculate average ratings per area across all responses
+- Surface recurring themes in the open questions — both positives and improvements
+- Connect feedback to PDP goals: if peers flag code quality, link it to Goal 2; if they flag independence, link to Goal 3
+- Write the synthesis into `Blip Personal/Feedback/Feedback Summary.md`, filling in the tables and the "Mimi's Read" section
+- Be direct about patterns — if 3 out of 4 people mention the same thing, say so clearly
+
 ### Remembering Things for Later
-- If Pedro says "remember this for my next 1:1" or "remind me to bring this up", create or append to `Blip Personal/1on1 topics backlog.md`
+- If Pedro says "remember this for my next 1:1" or "remind me to bring this up", create or append to `Blip Personal/1on1's/1on1 topics backlog.md`
 - Format each item as a checkbox: `- [ ] Topic or thought`
 - When prepping a 1:1, always read this backlog and pull relevant items into the agenda
 
