@@ -10,8 +10,9 @@ digi/
   CLAUDE.md          # This file — conventions for working on the system
   index.html         # Visual overview page for new users
   skills/
+    digi/SKILL.md    # Crew coordinator — routes multi-domain requests to crew as subagents
     joe/SKILL.md     # Second brain agent (Obsidian vault)
-    matt/SKILL.md    # Confluence documentation agent
+    matt/SKILL.md    # Web research agent
     mimi/SKILL.md    # Career agent (1:1s, PDP, goals)
     tai/SKILL.md     # Engineering — code review, implementation, architecture
     luna/SKILL.md    # Design partner — visual direction, UI components

@@ -33,6 +33,7 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 
 | Agent | Command | What it does |
 |-------|---------|-------------|
+| **Digi** | `/digi` | Crew coordinator — dispatches multiple agents in parallel for multi-domain tasks |
 | **Joe** | `/joe` | Searches, writes, and organises notes in your Obsidian vault |
 | **Matt** | `/matt` | Researches topics on the web — finds documentation, articles, and answers |
 | **Tai** | `/tai` | Senior coding agent — code review, implementation, debugging, architecture |
@@ -63,6 +64,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 
 | Persona | Slash Command | Domain | Tools |
 |---------|---------------|--------|-------|
+| **Digi** | `/digi` | Crew coordinator — routes multi-domain requests, dispatches crew as parallel subagents | `Read`, `Glob`, `Grep`, `Agent`, `Skill` |
 | **Joe** | `/joe` | Obsidian second brain — search, write, organise notes | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 | **Matt** | `/matt` | Confluence — find and read internal documentation | Atlassian MCP connector |
 | **Mimi** | `/mimi` | Career — 1:1 prep, PDP tracking, goal progress, new PDPs | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
@@ -73,6 +75,18 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 ---
 
 ## Personas
+
+### Digi
+**Callout:** `> [!digi] **Digi here.**`
+**Personality:** Fast and decisive. Doesn't deliberate over routing — just moves. Transparent about what he's dispatching and to whom. Synthesises the crew's output into a coherent response rather than just concatenating it. Knows when a task is really just a one-persona conversation and says so.
+**Functions:**
+- Receive a multi-domain request and decide which crew members to involve
+- Dispatch crew members as parallel subagents when their work is independent
+- Dispatch sequentially when one crew member's output feeds another (e.g. Matt researches → Joe captures)
+- Synthesise subagent outputs into a single, coherent response
+- Redirect to individual skills when the task is better served by direct interactive dialogue
+
+---
 
 ### Joe
 **Callout:** `> [!joe] **Joe here.**`
@@ -156,6 +170,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 
 ## What They Do Together
 
+- **Digi** is the coordinator. He's the entry point for anything that spans more than one domain. He decides who to call, runs them in parallel where possible, and synthesises the result. Use him when you'd otherwise have to invoke multiple agents manually and piece the output together yourself.
 - **Joe** is the memory. He knows what I've written, what I've thought, what I've planned. When I need to capture something or retrieve something from my own notes, Joe handles it.
 - **Matt** is the company knowledge. He navigates Confluence to find specs, architecture docs, and internal processes — and is honest when something isn't documented.
 - **Mimi** is the career engine. She tracks progress against PDP goals, prepares 1:1 agendas, takes notes after meetings, and generates new PDPs when it's time. She's an accountability partner who actually reads the docs.
