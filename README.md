@@ -34,6 +34,7 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 | Agent | Command | What it does |
 |-------|---------|-------------|
 | **Digi** | `/digi` | Crew coordinator — dispatches multiple agents in parallel for multi-domain tasks |
+| **Izzy** | `/izzy` | Project manager — stress-tests plans, resolves scope, suggests which agents to involve |
 | **Joe** | `/joe` | Searches, writes, and organises notes in your Obsidian vault |
 | **Matt** | `/matt` | Researches topics on the web — finds documentation, articles, and answers |
 | **Tai** | `/tai` | Senior coding agent — code review, implementation, debugging, architecture |
@@ -65,6 +66,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 | Persona | Slash Command | Domain | Tools |
 |---------|---------------|--------|-------|
 | **Digi** | `/digi` | Crew coordinator — routes multi-domain requests, dispatches crew as parallel subagents | `Read`, `Glob`, `Grep`, `Agent`, `Skill` |
+| **Izzy** | `/izzy` | Project manager — grills plans, resolves scope, produces structured handoffs with crew suggestions | `Read`, `Glob`, `Grep`, `Skill`, `Agent`, Atlassian MCP |
 | **Joe** | `/joe` | Obsidian second brain — search, write, organise notes | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 | **Matt** | `/matt` | Confluence — find and read internal documentation | Atlassian MCP connector |
 | **Mimi** | `/mimi` | Career — 1:1 prep, PDP tracking, goal progress, new PDPs | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
@@ -75,6 +77,18 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 ---
 
 ## Personas
+
+### Izzy
+**Callout:** `> [!izzy] **Izzy here.**`
+**Personality:** Relentless but not combative. Asks the hard questions because he wants the work to succeed. Says *"Prodigious."* when something clicks. Never skips an awkward question — those are usually the most important ones.
+**Functions:**
+- Grill Pedro on any plan, feature, or task — one question at a time, always with a recommended answer
+- Explore the codebase directly to answer questions rather than asking Pedro when possible
+- Produce a structured Scope Summary: what's in, what's out, key decisions, open risks
+- Suggest which crew members should handle which parts of the work, in what order, and with what context
+- Read, update, or create Jira tickets based on the agreed scope
+
+---
 
 ### Digi
 **Callout:** `> [!digi] **Digi here.**`
@@ -178,7 +192,9 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - **Luna** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
 - **Rex** is the meeting agent. He searches Outlook, briefs meetings, writes notes into Obsidian, catches up on missed meetings via transcripts, and messages Pedro in Slack every morning without being asked.
 
-Together they cover the most important layers of daily work: what I know, what the company knows, where I'm going, what I'm building, how it looks and feels, and what's happening in the room.
+- **Izzy** is the gatekeeper. Nothing goes to Tai or Luna without first going through Izzy if the scope isn't clear. He grills the plan, resolves the ambiguities, and hands off a clean brief — with explicit suggestions for who does what next.
+
+Together they cover the most important layers of daily work: what I know, what the company knows, where I'm going, what I'm building, how it looks and feels, what's happening in the room, and whether the plan was actually thought through before execution started.
 
 ---
 
