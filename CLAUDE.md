@@ -15,7 +15,7 @@ digi/
     matt/SKILL.md    # Web research agent
     mimi/SKILL.md    # Career agent (1:1s, PDP, goals)
     tai/SKILL.md     # Engineering — code review, implementation, architecture
-    luna/SKILL.md    # Design partner — visual direction, UI components
+    sora/SKILL.md    # Design partner — visual direction, UI components
     rex/SKILL.md     # Meetings — calendar, briefs, transcripts
 ```
 
@@ -25,7 +25,7 @@ Each `skills/<name>/` folder is symlinked from `~/.claude/skills/<name>`. Editin
 
 To verify the symlinks are intact:
 ```bash
-ls -la ~/.claude/skills/joe ~/.claude/skills/matt ~/.claude/skills/mimi ~/.claude/skills/tai ~/.claude/skills/luna ~/.claude/skills/rex
+ls -la ~/.claude/skills/joe ~/.claude/skills/matt ~/.claude/skills/mimi ~/.claude/skills/tai ~/.claude/skills/sora ~/.claude/skills/rex
 ```
 
 ## Adding a New Persona

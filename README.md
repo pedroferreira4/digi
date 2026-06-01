@@ -38,7 +38,7 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 | **Joe** | `/joe` | Searches, writes, and organises notes in your Obsidian vault |
 | **Matt** | `/matt` | Researches topics on the web — finds documentation, articles, and answers |
 | **Tai** | `/tai` | Senior coding agent — code review, implementation, debugging, architecture |
-| **Luna** | `/luna` | Design partner — analyses screenshots, makes design decisions, builds UI |
+| **Sora** | `/sora` | Design partner — analyses screenshots, makes design decisions, builds UI |
 | **Mimi** | `/mimi` | Career agent — 1:1 prep, goal tracking, personal development (needs Obsidian vault) |
 | **Rex** | `/rex` | Meeting agent — calendar briefings, pre-meeting context, post-meeting notes |
 
@@ -71,7 +71,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 | **Matt** | `/matt` | Confluence — find and read internal documentation | Atlassian MCP connector |
 | **Mimi** | `/mimi` | Career — 1:1 prep, PDP tracking, goal progress, new PDPs | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 | **Tai** | `/tai` | Engineering — code review, implementation, architecture, debugging | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + all technical skills |
-| **Luna** | `/luna` | Design — visual analysis, component creation, UI review, design direction | `Read`, `Write`, `Edit`, `Glob`, `Grep` + all design skills |
+| **Sora** | `/sora` | Design — visual analysis, component creation, UI review, design direction | `Read`, `Write`, `Edit`, `Glob`, `Grep` + all design skills |
 | **Rex** | `/rex` | Meetings — calendar briefings, pre-meeting context, post-meeting notes, transcript catchup | M365 connector + `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 
 ---
@@ -148,17 +148,17 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - Debugging: isolates the cause before fixing, never carpet-bombs
 - Orchestrates all technical skills: `master-review`, `code-review-skill`, `vercel-react-best-practices`, `vercel-composition-patterns`, and more
 - Collaborates with Joe (vault docs) and Matt (Confluence specs) before building
-- Receives Luna Briefs and implements them faithfully, signing off back to Luna when done
+- Receives Sora Briefs and implements them faithfully, signing off back to Sora when done
 
 ---
 
-### Luna
-**Callout:** `> [!luna] **Luna here.**`
+### Sora
+**Callout:** `> [!sora] **Sora here.**`
 **Personality:** Visual, precise, and opinionated — describes space, weight, rhythm, and contrast rather than vague adjectives. Curious about intent before jumping to solutions. Helps Pedro develop his design eye by explaining *why* a decision works. Knows when the right answer is "keep it simple."
 **Functions:**
 - Analyse images, screenshots, and design references — breaks down layout, spacing, typography, colour, interaction
 - Make all design decisions explicit before any code is written: spacing, states, motion, colour roles
-- Produce a structured **Luna → Tai Brief** with every spec Tai needs to implement
+- Produce a structured **Sora → Tai Brief** with every spec Tai needs to implement
 - Review Tai's output against visual intent, not just the spec
 - Generate production-grade UI components via `frontend-design`
 - Conduct craft-level UI reviews via `emil-design-eng`, `ui-ux-pro-max`, `ui-animation`, `web-design-guidelines`
@@ -189,10 +189,10 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - **Matt** is the company knowledge. He navigates Confluence to find specs, architecture docs, and internal processes — and is honest when something isn't documented.
 - **Mimi** is the career engine. She tracks progress against PDP goals, prepares 1:1 agendas, takes notes after meetings, and generates new PDPs when it's time. She's an accountability partner who actually reads the docs.
 - **Tai** is the engineer. He reviews code, implements components, analyses architecture, and debugs. He orchestrates all the technical Claude skills and pulls in Joe or Matt whenever the work touches documented knowledge.
-- **Luna** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
+- **Sora** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
 - **Rex** is the meeting agent. He searches Outlook, briefs meetings, writes notes into Obsidian, catches up on missed meetings via transcripts, and messages Pedro in Slack every morning without being asked.
 
-- **Izzy** is the gatekeeper. Nothing goes to Tai or Luna without first going through Izzy if the scope isn't clear. He grills the plan, resolves the ambiguities, and hands off a clean brief — with explicit suggestions for who does what next.
+- **Izzy** is the gatekeeper. Nothing goes to Tai or Sora without first going through Izzy if the scope isn't clear. He grills the plan, resolves the ambiguities, and hands off a clean brief — with explicit suggestions for who does what next.
 
 Together they cover the most important layers of daily work: what I know, what the company knows, where I'm going, what I'm building, how it looks and feels, what's happening in the room, and whether the plan was actually thought through before execution started.
 
@@ -200,9 +200,9 @@ Together they cover the most important layers of daily work: what I know, what t
 
 ## Design Principles
 
-- **Personas, not tools.** Each agent has a name, a voice, and a personality. They open every response with a callout (`> [!joe]`, `> [!matt]`, `> [!mimi]`, `> [!tai]`, `> [!luna]`, `> [!rex]`) so it's always clear who's talking.
+- **Personas, not tools.** Each agent has a name, a voice, and a personality. They open every response with a callout (`> [!joe]`, `> [!matt]`, `> [!mimi]`, `> [!tai]`, `> [!sora]`, `> [!rex]`) so it's always clear who's talking.
 - **Scoped tools.** Each persona only has access to the tools relevant to its domain — no overlap, no confusion.
-- **Collaborative.** Personas know about each other and defer when appropriate — Tai reads Confluence before building, Luna briefs Tai before designing, Mimi checks the vault before a 1:1.
+- **Collaborative.** Personas know about each other and defer when appropriate — Tai reads Confluence before building, Sora briefs Tai before designing, Mimi checks the vault before a 1:1.
 - **Honest.** If something isn't in the vault or isn't in Confluence, they say so rather than guessing.
 - **Expandable.** New personas can be added as new domains emerge.
 
