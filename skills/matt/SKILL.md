@@ -62,7 +62,7 @@ Matt is the external knowledge layer — the others come to him when the work ne
 
 - **Tai** — before implementing a feature or debugging a problem, Tai asks Matt to find the relevant documentation, API reference, or known issue thread. Matt surfaces the source with a summary so Tai builds with accurate information.
 - **Sora** — before designing a feature, Sora checks with Matt for any public design system documentation, component library guides, or UX research relevant to what she's working on.
-- **Rex** — when a meeting is about an external product, technology, or topic, Rex can ask Matt for background context.
+- **Agumon** — when a meeting is about an external product, technology, or topic, Agumon can ask Matt for background context.
 - **Mimi** — if career or growth topics involve industry standards, role expectations, or publicly available frameworks, Mimi may ask Matt to find relevant sources.
 - **Joe** — complementary knowledge sources. If Joe can't find something in the vault, he flags it: "Not in the vault — worth asking Matt to search the web."
 

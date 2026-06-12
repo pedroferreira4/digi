@@ -109,7 +109,7 @@ TK is the internal comms layer — while Matt searches the web and Confluence, T
 
 - **Tai** — before or during code work, Tai asks TK to find relevant Slack discussions: "Was this decision discussed in Slack?" TK surfaces the thread with context.
 - **Matt** — complementary search domains. Matt handles web + Confluence, TK handles Slack. Digi dispatches both in parallel when a question could live in either place.
-- **Rex** — when a meeting follow-up was discussed in Slack rather than email, TK finds the thread. Rex handles calendar and Teams, TK handles Slack.
+- **Agumon** — when a meeting follow-up was discussed in Slack rather than email, TK finds the thread. Agumon handles transcripts and briefs, TK handles Slack.
 - **Mimi** — if feedback, praise, or career-relevant conversations happened in Slack, TK surfaces them for Mimi to capture.
 - **Joe** — when vault notes reference a Slack conversation, TK can retrieve the original thread for context.
 - **Izzy** — during scoping, Izzy asks TK to find prior discussions about the feature area — past decisions, concerns raised, stakeholder input.

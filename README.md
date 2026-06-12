@@ -41,7 +41,7 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 | **Sora** | `/sora` | Design partner — analyses screenshots, makes design decisions, builds UI |
 | **Mimi** | `/mimi` | Career agent — 1:1 prep, goal tracking, personal development (needs Obsidian vault) |
 | **Davis** | `/davis` | Teaching agent — concepts, guided lessons, learning tracking (needs Obsidian vault) |
-| **Rex** | `/rex` | Meeting agent — calendar briefings, pre-meeting context, post-meeting notes |
+| **Agumon** | `/agumon` | Meeting briefings — reads transcripts, writes structured summaries (needs Obsidian vault) |
 
 **Required external skills:**
 - `improve` ([shadcn](https://github.com/shadcn)) — codebase auditor & improvement planner, used by Tai. Install via Claude Code skill marketplace. If missing, Tai will tell you.
@@ -50,7 +50,7 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 **Needs extra setup:**
 - **Joe** — will ask for your Obsidian vault path on first use. Just paste the full path when prompted (e.g. `/Users/yourname/Documents/my-vault`).
 - **Mimi** — works out of the same Obsidian vault as Joe. Set up Joe first, and Mimi will use the same vault.
-- **Rex** — requires a Microsoft 365 MCP connector for calendar access. Skip this one if you don't use Outlook.
+- **Agumon** — works with transcript files (Zoom `.vtt`, Teams, or pasted text). No API setup needed — just point him at a transcript.
 
 ---
 
@@ -78,7 +78,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 | **Tai** | `/tai` | Engineering — code review, implementation, architecture, debugging | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + all technical skills |
 | **Sora** | `/sora` | Design — visual analysis, component creation, UI review, design direction | `Read`, `Write`, `Edit`, `Glob`, `Grep` + all design skills |
 | **Davis** | `/davis` | Teaching — concepts, guided lessons, learning records, reference docs | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + `teach` skill |
-| **Rex** | `/rex` | Meetings — calendar briefings, pre-meeting context, post-meeting notes, transcript catchup | M365 connector + `Read`, `Write`, `Edit`, `Glob`, `Grep` |
+| **Agumon** | `/agumon` | Meeting briefings — transcript summaries, action items, structured briefs | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`, `WebFetch` |
 
 ---
 
@@ -188,18 +188,16 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 
 ---
 
-### Rex
-**Callout:** `> [!rex] **Rex here.**`
-**Personality:** Terse and factual. Gets in, finds the information, writes it up, gets out. Flags things Pedro needs to act on (overlapping meetings, no agenda). Honest when transcripts aren't available. No editorialising about meeting quality.
+### Agumon
+**Callout:** `> [!agumon] **Agumon here.**`
+**Personality:** Terse and factual. Gets in, digests the transcript, writes the brief, gets out. Flags things that directly affect Pedro. Honest when transcript quality is bad.
 **Functions:**
-- Search Outlook calendar for today's or any day's meetings via M365 connector
-- Read full event details: attendees, agenda, organiser, location/link
-- Create pre-meeting brief notes in Obsidian (`Meeting briefs/YYYY-MM-DD Meeting title.md`)
-- Write post-meeting notes and action items after Pedro describes what happened
-- Fetch Teams meeting transcripts for missed meetings and summarise: decisions, key points, action items
-- Generate daily agenda note (`Meeting briefs/YYYY-MM-DD Daily agenda.md`)
-- Also runs as a **Slack bot** (`rex-bot/`) — messages Pedro directly with morning briefings via launchd, no manual trigger needed
-- Skips Kraken team meetings and declined events automatically
+- Read meeting transcripts from any source: Zoom `.vtt` files, Teams transcripts, pasted text, or accessible URLs
+- Produce structured briefs: summary, key decisions, discussion points, action items
+- Write meeting briefs into Obsidian (`Meeting briefs/YYYY-MM-DD Meeting title.md`)
+- Batch catchup: process multiple missed meetings and surface what matters
+- Quick verbal summaries when Pedro doesn't need a saved note
+- Flag 1:1 meetings to Mimi for career follow-up
 
 ---
 
@@ -211,7 +209,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - **Mimi** is the career engine. She tracks progress against PDP goals, prepares 1:1 agendas, takes notes after meetings, and generates new PDPs when it's time. She's an accountability partner who actually reads the docs.
 - **Tai** is the engineer. He reviews code, implements components, analyses architecture, and debugs. He orchestrates all the technical Claude skills and pulls in Joe or Matt whenever the work touches documented knowledge.
 - **Sora** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
-- **Rex** is the meeting agent. He searches Outlook, briefs meetings, writes notes into Obsidian, catches up on missed meetings via transcripts, and messages Pedro in Slack every morning without being asked.
+- **Agumon** is the meeting briefer. He takes transcripts from any source — Zoom, Teams, or pasted text — and turns them into structured briefs: decisions, action items, and what matters to Pedro. No calendar integration needed; just feed him a transcript.
 - **Davis** is the teacher. He builds structured learning paths grounded in Pedro's actual goals and codebase. He connects to Mimi for career context, Tai for real code examples, and Matt for trusted resources. Learning progress is tracked across sessions so he always picks up where you left off.
 
 - **Izzy** is the gatekeeper. Nothing goes to Tai or Sora without first going through Izzy if the scope isn't clear. He grills the plan, resolves the ambiguities, and hands off a clean brief — with explicit suggestions for who does what next.
@@ -222,7 +220,7 @@ Together they cover the most important layers of daily work: what I know, what t
 
 ## Design Principles
 
-- **Personas, not tools.** Each agent has a name, a voice, and a personality. They open every response with a callout (`> [!joe]`, `> [!matt]`, `> [!mimi]`, `> [!tai]`, `> [!sora]`, `> [!rex]`) so it's always clear who's talking.
+- **Personas, not tools.** Each agent has a name, a voice, and a personality. They open every response with a callout (`> [!joe]`, `> [!matt]`, `> [!mimi]`, `> [!tai]`, `> [!sora]`, `> [!agumon]`) so it's always clear who's talking.
 - **Scoped tools.** Each persona only has access to the tools relevant to its domain — no overlap, no confusion.
 - **Collaborative.** Personas know about each other and defer when appropriate — Tai reads Confluence before building, Sora briefs Tai before designing, Mimi checks the vault before a 1:1.
 - **Honest.** If something isn't in the vault or isn't in Confluence, they say so rather than guessing.

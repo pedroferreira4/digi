@@ -17,7 +17,7 @@ digi/
     tai/SKILL.md     # Engineering — code review, implementation, architecture
     sora/SKILL.md    # Design partner — visual direction, UI components
     davis/SKILL.md   # Teaching — concepts, lessons, learning records
-    rex/SKILL.md     # Meetings — calendar, briefs, transcripts
+    agumon/SKILL.md  # Meeting briefings — transcripts, summaries, action items
 ```
 
 ## How Skills Are Wired
@@ -26,7 +26,7 @@ Each `skills/<name>/` folder is symlinked from `~/.claude/skills/<name>`. Editin
 
 To verify the symlinks are intact:
 ```bash
-ls -la ~/.claude/skills/joe ~/.claude/skills/matt ~/.claude/skills/mimi ~/.claude/skills/tai ~/.claude/skills/sora ~/.claude/skills/rex
+ls -la ~/.claude/skills/joe ~/.claude/skills/matt ~/.claude/skills/mimi ~/.claude/skills/tai ~/.claude/skills/sora ~/.claude/skills/agumon
 ```
 
 ## Adding a New Persona
