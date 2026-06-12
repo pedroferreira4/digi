@@ -42,6 +42,9 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 | **Mimi** | `/mimi` | Career agent — 1:1 prep, goal tracking, personal development (needs Obsidian vault) |
 | **Rex** | `/rex` | Meeting agent — calendar briefings, pre-meeting context, post-meeting notes |
 
+**Required external skills:**
+- `improve` ([shadcn](https://github.com/shadcn)) — codebase auditor & improvement planner, used by Tai. Install via Claude Code skill marketplace. If missing, Tai will tell you.
+
 **Needs extra setup:**
 - **Joe** — will ask for your Obsidian vault path on first use. Just paste the full path when prompted (e.g. `/Users/yourname/Documents/my-vault`).
 - **Mimi** — works out of the same Obsidian vault as Joe. Set up Joe first, and Mimi will use the same vault.
@@ -146,7 +149,8 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - Implementation: reads existing patterns first, matches codebase conventions
 - Architecture analysis: maps the shape of a problem before proposing a solution
 - Debugging: isolates the cause before fixing, never carpet-bombs
-- Orchestrates all technical skills: `master-review`, `code-review-skill`, `vercel-react-best-practices`, `vercel-composition-patterns`, and more
+- Codebase audit & improvement plans: invokes `improve` skill for full audits, focused analysis, and execution plans
+- Orchestrates all technical skills: `master-review`, `code-review-skill`, `improve`, `vercel-react-best-practices`, `vercel-composition-patterns`, and more
 - Collaborates with Joe (vault docs) and Matt (Confluence specs) before building
 - Receives Sora Briefs and implements them faithfully, signing off back to Sora when done
 

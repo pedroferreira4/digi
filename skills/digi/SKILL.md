@@ -113,6 +113,9 @@ Keep prompts focused. Don't include information the subagent doesn't need.
 → Dispatch Matt (web + Confluence) + TK (Slack) in **parallel**
 → Synthesise: what's documented externally vs what was discussed internally
 
+### "Audit this codebase" / "What should we improve?" / "Find tech debt"
+→ Dispatch Tai — he invokes the `improve` skill internally
+
 ### "What do I know about X?" / "Find my notes on Y"
 → Dispatch Joe — single agent
 
