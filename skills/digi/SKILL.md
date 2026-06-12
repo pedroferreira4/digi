@@ -116,6 +116,10 @@ Keep prompts focused. Don't include information the subagent doesn't need.
 ### "Audit this codebase" / "What should we improve?" / "Find tech debt"
 → Dispatch Tai — he invokes the `improve` skill internally
 
+### "Find UI polish opportunities" / "What animations are missing?" / "Make the app feel smoother"
+→ Dispatch Sora — she runs a UI Polish Audit and produces prioritised findings
+→ If Pedro wants to act on findings: Sora briefs Tai for implementation
+
 ### "What do I know about X?" / "Find my notes on Y"
 → Dispatch Joe — single agent
 

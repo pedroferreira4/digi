@@ -163,6 +163,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - Analyse images, screenshots, and design references — breaks down layout, spacing, typography, colour, interaction
 - Make all design decisions explicit before any code is written: spacing, states, motion, colour roles
 - Produce a structured **Sora → Tai Brief** with every spec Tai needs to implement
+- UI polish audit: surveys components for missing transitions, animations, hover states, loading patterns, and micro-interactions — prioritised by feel-per-effort
 - Review Tai's output against visual intent, not just the spec
 - Generate production-grade UI components via `frontend-design`
 - Conduct craft-level UI reviews via `emil-design-eng`, `ui-ux-pro-max`, `ui-animation`, `web-design-guidelines`
