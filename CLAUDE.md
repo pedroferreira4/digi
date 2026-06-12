@@ -16,6 +16,7 @@ digi/
     mimi/SKILL.md    # Career agent (1:1s, PDP, goals)
     tai/SKILL.md     # Engineering — code review, implementation, architecture
     sora/SKILL.md    # Design partner — visual direction, UI components
+    davis/SKILL.md   # Teaching — concepts, lessons, learning records
     rex/SKILL.md     # Meetings — calendar, briefs, transcripts
 ```
 

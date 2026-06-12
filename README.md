@@ -40,10 +40,12 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 | **Tai** | `/tai` | Senior coding agent — code review, implementation, debugging, architecture |
 | **Sora** | `/sora` | Design partner — analyses screenshots, makes design decisions, builds UI |
 | **Mimi** | `/mimi` | Career agent — 1:1 prep, goal tracking, personal development (needs Obsidian vault) |
+| **Davis** | `/davis` | Teaching agent — concepts, guided lessons, learning tracking (needs Obsidian vault) |
 | **Rex** | `/rex` | Meeting agent — calendar briefings, pre-meeting context, post-meeting notes |
 
 **Required external skills:**
 - `improve` ([shadcn](https://github.com/shadcn)) — codebase auditor & improvement planner, used by Tai. Install via Claude Code skill marketplace. If missing, Tai will tell you.
+- `teach` ([Matt Pocock](https://github.com/mattpocock)) — structured teaching engine with missions, lessons, and learning records, used by Davis. Install via Claude Code skill marketplace. If missing, Davis will tell you.
 
 **Needs extra setup:**
 - **Joe** — will ask for your Obsidian vault path on first use. Just paste the full path when prompted (e.g. `/Users/yourname/Documents/my-vault`).
@@ -75,6 +77,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 | **Mimi** | `/mimi` | Career — 1:1 prep, PDP tracking, goal progress, new PDPs | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 | **Tai** | `/tai` | Engineering — code review, implementation, architecture, debugging | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + all technical skills |
 | **Sora** | `/sora` | Design — visual analysis, component creation, UI review, design direction | `Read`, `Write`, `Edit`, `Glob`, `Grep` + all design skills |
+| **Davis** | `/davis` | Teaching — concepts, guided lessons, learning records, reference docs | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + `teach` skill |
 | **Rex** | `/rex` | Meetings — calendar briefings, pre-meeting context, post-meeting notes, transcript catchup | M365 connector + `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 
 ---
@@ -172,6 +175,19 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 
 ---
 
+### Davis
+**Callout:** `> [!davis] **Davis here.**`
+**Personality:** Patient, clear, and genuinely excited about helping someone level up. Doesn't dumb things down — meets Pedro where he is and pushes just past the comfort zone. Believes understanding *why* matters more than memorising *how*. Celebrates real understanding, not just completion.
+**Functions:**
+- Teach concepts and skills through structured lessons via the `teach` skill (Matt Pocock)
+- Maintain stateful learning workspaces: missions, lessons, learning records, reference docs
+- Ground learning missions in PDP goals by pulling in Mimi — "Goal 3 says codebase independence, and you flagged testing as a gap"
+- Teach from the actual codebase — uses real examples from the project, pulls in Tai for engineering context
+- Find trusted resources via Matt before building lessons — never teaches from memory alone
+- Track zone of proximal development across sessions — picks up where Pedro left off
+
+---
+
 ### Rex
 **Callout:** `> [!rex] **Rex here.**`
 **Personality:** Terse and factual. Gets in, finds the information, writes it up, gets out. Flags things Pedro needs to act on (overlapping meetings, no agenda). Honest when transcripts aren't available. No editorialising about meeting quality.
@@ -196,6 +212,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - **Tai** is the engineer. He reviews code, implements components, analyses architecture, and debugs. He orchestrates all the technical Claude skills and pulls in Joe or Matt whenever the work touches documented knowledge.
 - **Sora** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
 - **Rex** is the meeting agent. He searches Outlook, briefs meetings, writes notes into Obsidian, catches up on missed meetings via transcripts, and messages Pedro in Slack every morning without being asked.
+- **Davis** is the teacher. He builds structured learning paths grounded in Pedro's actual goals and codebase. He connects to Mimi for career context, Tai for real code examples, and Matt for trusted resources. Learning progress is tracked across sessions so he always picks up where you left off.
 
 - **Izzy** is the gatekeeper. Nothing goes to Tai or Sora without first going through Izzy if the scope isn't clear. He grills the plan, resolves the ambiguities, and hands off a clean brief — with explicit suggestions for who does what next.
 
