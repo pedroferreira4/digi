@@ -1,0 +1,15 @@
+# work — full profile: every agent in the crew.
+# This is the default profile (used when no profile name is passed to the
+# installer), so the out-of-the-box behaviour is "install everything".
+# One skill-folder name per line. Blank lines and # comments are ignored.
+
+digi
+izzy
+joe
+matt
+mimi
+tai
+sora
+davis
+agumon
+tk

@@ -1,0 +1,9 @@
+# personal — lean profile for Pedro's personal machine (e.g. Windows PC).
+# Installs only the agents that make sense off the clock: the coordinator,
+# the engineer, the second brain, and the design partner.
+# One skill-folder name per line. Blank lines and # comments are ignored.
+
+digi
+tai
+joe
+sora

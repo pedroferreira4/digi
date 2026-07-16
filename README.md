@@ -27,6 +27,45 @@ bash setup.sh
 
 Then open Claude Code, start a new conversation, and type `/joe` (or any other agent below).
 
+### Profiles
+
+The installer can install different subsets of the crew depending on the machine. Profiles live in `profiles/<name>.txt` — one skill-folder name per line.
+
+```bash
+bash setup.sh            # default: installs the full crew (the "work" profile)
+bash setup.sh personal   # installs only the personal profile
+```
+
+- **work** (default) — every agent. Running `setup.sh` with no argument installs everything, so nothing changes for existing setups.
+- **personal** — a lean profile with just **Digi**, **Tai**, **Joe**, and **Sora** — the coordinator, the engineer, the second brain, and the design partner.
+
+If you pass a profile that doesn't exist, the script stops and lists the available profiles. If a profile lists an agent that no longer has a folder, it warns and keeps going.
+
+### Windows
+
+Windows uses the PowerShell installer, which behaves exactly like `setup.sh` — same profiles, same copy-based install:
+
+```powershell
+pwsh ./setup.ps1            # full crew
+pwsh ./setup.ps1 personal   # personal profile
+```
+
+Because the install is by **copy** (not symlinks), Windows users don't need Developer Mode or elevated permissions. The script installs into `%USERPROFILE%\.claude\skills` and creates that folder if it doesn't exist yet.
+
+### Third-party skill dependencies
+
+The crew doesn't work in a vacuum — some agents invoke **external skills** that live in other people's GitHub repos, not in this one. Tai reaches for `improve`, the Vercel skills, and `modern-javascript-patterns`; Sora reaches for `emil-design-eng`, `ui-ux-pro-max`, `ui-animation`, `web-design-guidelines`, and the animation/`better-*` skills; Davis needs `teach`; Izzy needs the `grill-*` skills. On a fresh machine those would be missing, which quietly degrades the crew.
+
+Those dependencies are pinned in **`skills-deps.lock.json`** at the repo root. Each entry records the git repo (`sourceUrl`) and the path to the skill's `SKILL.md` inside it (`skillPath`), plus which persona needs it. The file is committed, so the repo is self-describing and portable.
+
+After copying the crew, **both installers re-fetch these third-party skills automatically** — they shallow-clone each unique repo once and copy the skill folder into `~/.claude/skills/`. It's profile-aware: `personal` only fetches what Tai and Sora need; `work` fetches everything.
+
+A few things to know:
+- **`git` is required.** The re-fetch step needs `git` on your PATH. If it's missing, the installer **warns and skips** the third-party skills — the crew still installs fine — and tells you to install git and re-run. (The bash script also needs `python3` to read the lock; PowerShell parses the JSON natively.)
+- **Warn-and-continue.** If one skill's repo is unreachable or its path has moved, that one is skipped with a warning — it never aborts the whole install.
+- **MCP caveat.** Some skills are backed by an **MCP server** (e.g. Figma design skills). Fetching the `SKILL.md` files does **not** wire up MCP — you still have to configure that server in Claude Code separately.
+- **A few skills can't be auto-fetched.** `master-review`, `code-review-skill`, `frontend-design`, and `pr-review-toolkit:review-pr` aren't tracked with a git source (they're plugin/marketplace skills). They're listed under `unresolved` in the lock file — install them via their plugin. If one is missing, the agent that needs it will tell you.
+
 ---
 
 ## The Agents
@@ -42,15 +81,25 @@ Then open Claude Code, start a new conversation, and type `/joe` (or any other a
 | **Mimi** | `/mimi` | Career agent — 1:1 prep, goal tracking, personal development (needs Obsidian vault) |
 | **Davis** | `/davis` | Teaching agent — concepts, guided lessons, learning tracking (needs Obsidian vault) |
 | **Agumon** | `/agumon` | Meeting briefings — reads transcripts, writes structured summaries (needs Obsidian vault) |
+| **TK** | `/tk` | Slack agent — reads channels and threads, searches messages, sends messages and drafts (requires Slack connector) |
 
 **Required external skills:**
-- `improve` ([shadcn](https://github.com/shadcn)) — codebase auditor & improvement planner, used by Tai. Install via Claude Code skill marketplace. If missing, Tai will tell you.
-- `teach` ([Matt Pocock](https://github.com/mattpocock)) — structured teaching engine with missions, lessons, and learning records, used by Davis. Install via Claude Code skill marketplace. If missing, Davis will tell you.
+
+Most of these are **fetched automatically** by the installer from `skills-deps.lock.json` (see [Third-party skill dependencies](#third-party-skill-dependencies) above) — you only need `git` on your PATH. Highlights:
+- `improve` ([shadcn](https://github.com/shadcn)) — codebase auditor & improvement planner, used by Tai.
+- `teach` ([Matt Pocock](https://github.com/mattpocock)) — structured teaching engine with missions, lessons, and learning records, used by Davis.
+- Vercel skills, `modern-javascript-patterns` (Tai); `emil-design-eng`, `ui-ux-pro-max`, `ui-animation`, `web-design-guidelines`, animation and `better-*` skills (Sora); the `grill-*` skills (Izzy).
+
+A handful can't be auto-fetched (no git source): `master-review`, `code-review-skill`, `frontend-design`, `pr-review-toolkit:review-pr`. Install these via their Claude Code plugin/marketplace — they're listed under `unresolved` in the lock file. If one is missing, the agent that needs it will tell you.
 
 **Needs extra setup:**
 - **Joe** — will ask for your Obsidian vault path on first use. Just paste the full path when prompted (e.g. `/Users/yourname/Documents/my-vault`).
 - **Mimi** — works out of the same Obsidian vault as Joe. Set up Joe first, and Mimi will use the same vault.
 - **Agumon** — works with transcript files (Zoom `.vtt`, Teams, or pasted text). No API setup needed — just point him at a transcript.
+- **TK** — reads and writes Slack. Requires the Slack connector to be set up in Claude Code.
+
+**Roadmap (not shipped yet):**
+- **Joe + Notion** — Joe works with Obsidian today. Notion support is planned so he can read and write Notion pages as well, but it requires a **Notion MCP connector** to be set up in Claude Code, which isn't connected yet. Until that connector exists, Joe is Obsidian-only.
 
 ---
 
@@ -73,12 +122,13 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 | **Digi** | `/digi` | Crew coordinator — routes multi-domain requests, dispatches crew as parallel subagents | `Read`, `Glob`, `Grep`, `Agent`, `Skill` |
 | **Izzy** | `/izzy` | Project manager — grills plans, resolves scope, produces structured handoffs with crew suggestions | `Read`, `Glob`, `Grep`, `Skill`, `Agent`, Atlassian MCP |
 | **Joe** | `/joe` | Obsidian second brain — search, write, organise notes | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
-| **Matt** | `/matt` | Confluence — find and read internal documentation | Atlassian MCP connector |
+| **Matt** | `/matt` | Web research — finds and summarises docs, articles, specs (also searches Confluence/Jira) | `WebSearch`, `WebFetch` + Atlassian MCP |
 | **Mimi** | `/mimi` | Career — 1:1 prep, PDP tracking, goal progress, new PDPs | `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 | **Tai** | `/tai` | Engineering — code review, implementation, architecture, debugging | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + all technical skills |
 | **Sora** | `/sora` | Design — visual analysis, component creation, UI review, design direction | `Read`, `Write`, `Edit`, `Glob`, `Grep` + all design skills |
 | **Davis** | `/davis` | Teaching — concepts, guided lessons, learning records, reference docs | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` + `teach` skill |
 | **Agumon** | `/agumon` | Meeting briefings — transcript summaries, action items, structured briefs | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`, `WebFetch` |
+| **TK** | `/tk` | Slack — read channels/threads, search messages, look up users, send messages and drafts | Slack MCP connector |
 
 ---
 
@@ -124,11 +174,11 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 **Callout:** `> [!matt] **Matt here.**`
 **Personality:** Methodical and thorough, with a dry sense of humour about outdated docs. Tries multiple search angles before giving up. Honest when nothing is found. Flags contradictions between pages and notes which one is newer.
 **Functions:**
-- Free-text and CQL search across Confluence spaces
-- Read full page content with last-modified date
-- Browse space and page trees to find nested documentation
-- Flag stale docs (over 1 year old)
-- Surface page title, space, modified date, and key content — never just a link
+- Search the web for documentation, articles, specs, and guides — then summarise what's useful
+- Try multiple search angles before giving up, and is honest when nothing is found
+- Flag contradictions between sources and note which one is newer
+- Also searches Confluence and Jira (Atlassian MCP) for internal documentation and tickets
+- Surface source, date, and key content — never just a link
 
 ---
 
@@ -201,6 +251,18 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 
 ---
 
+### TK
+**Callout:** `> [!tk] **TK here.**`
+**Personality:** Fast reads, clean summaries, no noise. Knows how to find the right channel, thread, or message and relay it without editorialising. The team's internal comms layer.
+**Functions:**
+- Read Slack channels and threads, and summarise what matters
+- Search messages across public and private channels
+- Look up user profiles — who said what, and who they are
+- Send messages and drafts on Pedro's behalf, or schedule them
+- Read, create, and update Slack canvases
+
+---
+
 ## What They Do Together
 
 - **Digi** is the coordinator. He's the entry point for anything that spans more than one domain. He decides who to call, runs them in parallel where possible, and synthesises the result. Use him when you'd otherwise have to invoke multiple agents manually and piece the output together yourself.
@@ -211,6 +273,7 @@ Each persona has a specific domain, a distinct personality, and a defined set of
 - **Sora** is the design partner. She works from images and references to make design decisions, briefs Tai for implementation, and reviews the output. She covers personal and work projects and helps develop design instincts along the way.
 - **Agumon** is the meeting briefer. He takes transcripts from any source — Zoom, Teams, or pasted text — and turns them into structured briefs: decisions, action items, and what matters to Pedro. No calendar integration needed; just feed him a transcript.
 - **Davis** is the teacher. He builds structured learning paths grounded in Pedro's actual goals and codebase. He connects to Mimi for career context, Tai for real code examples, and Matt for trusted resources. Learning progress is tracked across sessions so he always picks up where you left off.
+- **TK** is the comms layer. He lives in Slack — reading channels and threads, searching for past conversations, looking up who said what, and sending messages or drafts on Pedro's behalf. When something was discussed in Slack and needs capturing, TK finds it.
 
 - **Izzy** is the gatekeeper. Nothing goes to Tai or Sora without first going through Izzy if the scope isn't clear. He grills the plan, resolves the ambiguities, and hands off a clean brief — with explicit suggestions for who does what next.
 
@@ -220,7 +283,7 @@ Together they cover the most important layers of daily work: what I know, what t
 
 ## Design Principles
 
-- **Personas, not tools.** Each agent has a name, a voice, and a personality. They open every response with a callout (`> [!joe]`, `> [!matt]`, `> [!mimi]`, `> [!tai]`, `> [!sora]`, `> [!agumon]`) so it's always clear who's talking.
+- **Personas, not tools.** Each agent has a name, a voice, and a personality. They open every response with a callout (`> [!joe]`, `> [!matt]`, `> [!mimi]`, `> [!tai]`, `> [!sora]`, `> [!agumon]`, `> [!tk]`, and so on) so it's always clear who's talking.
 - **Scoped tools.** Each persona only has access to the tools relevant to its domain — no overlap, no confusion.
 - **Collaborative.** Personas know about each other and defer when appropriate — Tai reads Confluence before building, Sora briefs Tai before designing, Mimi checks the vault before a 1:1.
 - **Honest.** If something isn't in the vault or isn't in Confluence, they say so rather than guessing.
@@ -230,11 +293,11 @@ Together they cover the most important layers of daily work: what I know, what t
 
 ## Adding a New Persona
 
-1. Create `skills/<name>/SKILL.md` in this repo
-2. Symlink it: `ln -s ~/Documents/Projetos/digi/skills/<name> ~/.claude/skills/<name>`
-3. Add a `SKILL.md` with:
+1. Create `skills/<name>/SKILL.md` in this repo, with:
    - YAML frontmatter: `name`, `description`, `allowed-tools`
    - Persona identity, domain, tool usage guide, and personality notes
    - A callout opener: `> [!name] **Name here.**`
-4. Add the persona to this README (crew table + Personas section + What They Do Together)
+2. Add the persona to the relevant profile file(s) in `profiles/` — at minimum `profiles/work.txt` (the full crew), and `profiles/personal.txt` if it belongs in the lean set.
+3. Install it: run `bash setup.sh` (or `pwsh ./setup.ps1`) to copy it into Claude Code — or, for local dev, symlink it: `ln -s ~/Documents/Projetos/digi/skills/<name> ~/.claude/skills/<name>`
+4. Add the persona to this README (both crew tables + Personas section + What They Do Together)
 5. Commit

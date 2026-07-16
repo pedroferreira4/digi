@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # setup.sh — Install digi agent skills into Claude Code
-# Run this once after cloning the repo: bash setup.sh
+# Run this once after cloning the repo: bash setup.sh [profile]
+#
+# The optional first argument is a profile name (see profiles/<name>.txt).
+# Omit it to install every agent (the "work" profile is the default).
+#   bash setup.sh            # full install (all agents)
+#   bash setup.sh personal   # install only the agents in profiles/personal.txt
 
 set -e
 
@@ -16,11 +21,28 @@ info() { echo -e "  $1"; }
 warn() { echo -e "${YELLOW}  !${RESET} $1"; }
 fail() { echo -e "${RED}  ✗${RESET} $1"; }
 
+# ── Resolve the profile ───────────────────────────────────────────────────────
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROFILES_DIR="$REPO_DIR/profiles"
+PROFILE="${1:-work}"
+PROFILE_FILE="$PROFILES_DIR/$PROFILE.txt"
+
 # ── Banner ────────────────────────────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}digi — Agent Setup${RESET}"
+echo -e "${BOLD}digi — Agent Setup${RESET}  ${YELLOW}(profile: $PROFILE)${RESET}"
 echo "────────────────────────────────────"
 echo ""
+
+if [ ! -f "$PROFILE_FILE" ]; then
+  fail "No profile named '$PROFILE' found at $PROFILE_FILE"
+  echo ""
+  info "Available profiles:"
+  for f in "$PROFILES_DIR"/*.txt; do
+    [ -e "$f" ] && info "  • $(basename "$f" .txt)"
+  done
+  echo ""
+  exit 1
+fi
 
 # ── Find the target skills directory ─────────────────────────────────────────
 CLAUDE_DIR="$HOME/.claude"
@@ -60,8 +82,7 @@ else
   info "Installing into $SKILLS_DIR"
 fi
 
-# ── Copy each skill ───────────────────────────────────────────────────────────
-REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+# ── Copy each skill in the profile ────────────────────────────────────────────
 REPO_SKILLS="$REPO_DIR/skills"
 
 echo ""
@@ -70,10 +91,23 @@ echo ""
 
 INSTALLED=0
 FAILED=0
+MISSING=0
 
-for skill_dir in "$REPO_SKILLS"/*/; do
-  skill_name="$(basename "$skill_dir")"
+# Read the profile: one skill-folder name per line, ignoring blanks and # comments
+while IFS= read -r line || [ -n "$line" ]; do
+  # Strip inline comments and surrounding whitespace
+  skill_name="${line%%#*}"
+  skill_name="$(echo "$skill_name" | xargs)"
+  [ -z "$skill_name" ] && continue
+
+  skill_dir="$REPO_SKILLS/$skill_name"
   target="$SKILLS_DIR/$skill_name"
+
+  if [ ! -d "$skill_dir" ]; then
+    warn "$skill_name — listed in profile but no such folder in skills/ (skipping)"
+    MISSING=$((MISSING + 1))
+    continue
+  fi
 
   # Remove then copy — avoids the macOS cp -r nesting trap on re-runs
   if rm -rf "$target" && cp -r "$skill_dir" "$target" 2>/dev/null; then
@@ -83,16 +117,130 @@ for skill_dir in "$REPO_SKILLS"/*/; do
     fail "$skill_name — could not copy (check permissions on $SKILLS_DIR)"
     FAILED=$((FAILED + 1))
   fi
-done
+done < "$PROFILE_FILE"
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo ""
 echo "────────────────────────────────────"
 
-if [ "$FAILED" -gt 0 ]; then
-  warn "$INSTALLED skills installed, $FAILED failed."
+if [ "$FAILED" -gt 0 ] || [ "$MISSING" -gt 0 ]; then
+  warn "$INSTALLED skills installed, $FAILED failed, $MISSING missing from skills/."
 else
   ok "$INSTALLED skills installed successfully."
+fi
+
+# ── Third-party skill dependencies ────────────────────────────────────────────
+# The crew (especially Tai and Sora) invoke external, non-crew skills that live
+# in OTHER GitHub repos — they're described in skills-deps.lock.json. We re-fetch
+# them here by shallow-cloning each unique repo once and copying the folder that
+# contains the skill's SKILL.md into ~/.claude/skills/<name>.
+#
+# Gating:
+#   • Needs `git` on PATH and `python3` (to read the JSON lock). If either is
+#     missing we warn and skip — the crew install above still succeeded.
+#   • Profile-driven: only fetches deps whose owning persona is active for this
+#     profile (see the "profiles" map in the lock file). So `personal` pulls
+#     Tai + Sora deps; `work` pulls everything.
+#   • Warn-and-continue: a failed clone/copy for one skill never aborts the rest.
+#
+# NOTE: MCP-backed skills (e.g. Figma design skills) are NOT fully wired by this
+# step. Cloning the SKILL.md files does not configure their MCP server — that has
+# to be set up separately in Claude Code.
+DEPS_LOCK="$REPO_DIR/skills-deps.lock.json"
+
+echo ""
+echo "────────────────────────────────────"
+info "Third-party skill dependencies..."
+echo ""
+
+if [ ! -f "$DEPS_LOCK" ]; then
+  warn "No skills-deps.lock.json found — skipping third-party skills."
+elif ! command -v git >/dev/null 2>&1; then
+  warn "git not found on PATH — skipping third-party skills."
+  info "  Install git, then re-run this script to fetch Tai's & Sora's external skills."
+elif ! command -v python3 >/dev/null 2>&1; then
+  warn "python3 not found — can't read the lock file — skipping third-party skills."
+else
+  # Emit one "name<TAB>sourceUrl<TAB>skillPath" line per skill needed by this profile.
+  DEPS_LIST="$(python3 - "$DEPS_LOCK" "$PROFILE" <<'PY'
+import json, sys
+lock_path, profile = sys.argv[1], sys.argv[2]
+data = json.load(open(lock_path))
+personas = set(data.get("profiles", {}).get(profile, []))
+# Unknown profile → fetch everything (safest default; matches "work" = all).
+for name, e in data.get("skills", {}).items():
+    needed_by = set(e.get("neededBy", []))
+    if personas and not (needed_by & personas):
+        continue
+    url = e.get("sourceUrl", "")
+    path = e.get("skillPath", "")
+    if url and path:
+        print(f"{name}\t{url}\t{path}")
+PY
+)" || DEPS_LIST=""
+
+  if [ -z "$DEPS_LIST" ]; then
+    info "No third-party skills needed for profile '$PROFILE'."
+  else
+    TMP_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/digi-deps.XXXXXX")"
+    FETCHED=0
+    FETCH_FAILED=0
+
+    # Clone each unique repo once, keyed by a filesystem-safe slug of the URL.
+    clone_repo() {
+      url="$1"
+      slug="$(echo "$url" | tr -c 'A-Za-z0-9' '_')"
+      dest="$TMP_ROOT/$slug"
+      if [ -d "$dest" ]; then
+        return 0   # already cloned this run
+      fi
+      if git clone --quiet --depth 1 "$url" "$dest" 2>/dev/null; then
+        return 0
+      fi
+      rm -rf "$dest"
+      return 1
+    }
+
+    while IFS="$(printf '\t')" read -r name url skillpath; do
+      [ -z "$name" ] && continue
+
+      if ! clone_repo "$url"; then
+        warn "$name — could not clone $url (skipping)"
+        FETCH_FAILED=$((FETCH_FAILED + 1))
+        continue
+      fi
+
+      slug="$(echo "$url" | tr -c 'A-Za-z0-9' '_')"
+      src_dir="$TMP_ROOT/$slug/$(dirname "$skillpath")"
+      target="$SKILLS_DIR/$name"
+
+      if [ ! -f "$TMP_ROOT/$slug/$skillpath" ]; then
+        warn "$name — $skillpath not found in repo (skipping)"
+        FETCH_FAILED=$((FETCH_FAILED + 1))
+        continue
+      fi
+
+      if rm -rf "$target" && cp -r "$src_dir" "$target" 2>/dev/null; then
+        ok "$name  (from $url)"
+        FETCHED=$((FETCHED + 1))
+      else
+        warn "$name — could not copy into $SKILLS_DIR (skipping)"
+        FETCH_FAILED=$((FETCH_FAILED + 1))
+      fi
+    done <<EOF
+$DEPS_LIST
+EOF
+
+    rm -rf "$TMP_ROOT"
+
+    echo ""
+    if [ "$FETCH_FAILED" -gt 0 ]; then
+      warn "$FETCHED third-party skills fetched, $FETCH_FAILED failed (see warnings above)."
+    else
+      ok "$FETCHED third-party skills fetched."
+    fi
+    info "Note: MCP-backed skills (e.g. Figma) still need their MCP server configured in Claude Code."
+  fi
 fi
 
 echo ""
@@ -107,5 +255,5 @@ echo "       /matt  — web research and documentation"
 echo "       /tai   — coding, code review, architecture"
 echo "       /sora  — design, UI components, visual direction"
 echo "       /mimi  — career, 1:1 prep, goal tracking"
-echo "       /rex   — meetings and calendar (requires Microsoft 365 connector)"
+echo "       /agumon — meeting briefings from transcripts"
 echo ""

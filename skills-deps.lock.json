@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "description": "Third-party (non-crew) skills the digi crew depends on. The crew personas (Tai, Sora, Davis, Izzy) invoke these external skills by name; they live in other GitHub repos and are NOT part of this repo's skills/ folder. setup.sh / setup.ps1 re-fetch them via git after installing the crew. Each entry: sourceUrl (git repo to clone) + skillPath (path to the SKILL.md inside that repo — the folder CONTAINING it is copied to ~/.claude/skills/<name>). Grouped by which crew persona needs them, and by profile.",
+  "profiles": {
+    "personal": ["tai", "sora"],
+    "work": ["tai", "sora", "davis", "izzy"]
+  },
+  "skills": {
+    "improve": {
+      "neededBy": ["tai"],
+      "source": "shadcn/improve",
+      "sourceUrl": "https://github.com/shadcn/improve.git",
+      "skillPath": "skills/improve/SKILL.md"
+    },
+    "modern-javascript-patterns": {
+      "neededBy": ["tai"],
+      "source": "wshobson/agents",
+      "sourceUrl": "https://github.com/wshobson/agents.git",
+      "skillPath": "plugins/javascript-typescript/skills/modern-javascript-patterns/SKILL.md"
+    },
+    "vercel-react-best-practices": {
+      "neededBy": ["tai"],
+      "source": "vercel-labs/agent-skills",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-best-practices/SKILL.md"
+    },
+    "vercel-react-native-skills": {
+      "neededBy": ["tai"],
+      "source": "vercel-labs/agent-skills",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-native-skills/SKILL.md"
+    },
+    "vercel-composition-patterns": {
+      "neededBy": ["tai"],
+      "source": "vercel-labs/agent-skills",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/composition-patterns/SKILL.md"
+    },
+    "emil-design-eng": {
+      "neededBy": ["sora"],
+      "source": "emilkowalski/skill",
+      "sourceUrl": "https://github.com/emilkowalski/skill.git",
+      "skillPath": "skills/emil-design-eng/SKILL.md"
+    },
+    "ui-ux-pro-max": {
+      "neededBy": ["sora"],
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md"
+    },
+    "ui-animation": {
+      "neededBy": ["sora"],
+      "source": "mblode/agent-skills",
+      "sourceUrl": "https://github.com/mblode/agent-skills.git",
+      "skillPath": "skills/ui-animation/SKILL.md"
+    },
+    "web-design-guidelines": {
+      "neededBy": ["sora"],
+      "source": "vercel-labs/agent-skills",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/web-design-guidelines/SKILL.md"
+    },
+    "apple-design": {
+      "neededBy": ["sora"],
+      "source": "emilkowalski/skills",
+      "sourceUrl": "https://github.com/emilkowalski/skills.git",
+      "skillPath": "skills/apple-design/SKILL.md"
+    },
+    "animation-vocabulary": {
+      "neededBy": ["sora"],
+      "source": "emilkowalski/skills",
+      "sourceUrl": "https://github.com/emilkowalski/skills.git",
+      "skillPath": "skills/animation-vocabulary/SKILL.md"
+    },
+    "find-animation-opportunities": {
+      "neededBy": ["sora"],
+      "source": "emilkowalski/skills",
+      "sourceUrl": "https://github.com/emilkowalski/skills.git",
+      "skillPath": "skills/find-animation-opportunities/SKILL.md"
+    },
+    "review-animations": {
+      "neededBy": ["sora"],
+      "source": "emilkowalski/skills",
+      "sourceUrl": "https://github.com/emilkowalski/skills.git",
+      "skillPath": "skills/review-animations/SKILL.md"
+    },
+    "improve-animations": {
+      "neededBy": ["sora"],
+      "source": "emilkowalski/skills",
+      "sourceUrl": "https://github.com/emilkowalski/skills.git",
+      "skillPath": "skills/improve-animations/SKILL.md"
+    },
+    "better-colors": {
+      "neededBy": ["sora"],
+      "source": "jakubkrehel/skills",
+      "sourceUrl": "https://github.com/jakubkrehel/skills.git",
+      "skillPath": "skills/better-colors/SKILL.md"
+    },
+    "better-typography": {
+      "neededBy": ["sora"],
+      "source": "jakubkrehel/skills",
+      "sourceUrl": "https://github.com/jakubkrehel/skills.git",
+      "skillPath": "skills/better-typography/SKILL.md"
+    },
+    "better-ui": {
+      "neededBy": ["sora"],
+      "source": "jakubkrehel/skills",
+      "sourceUrl": "https://github.com/jakubkrehel/skills.git",
+      "skillPath": "skills/better-ui/SKILL.md"
+    },
+    "teach": {
+      "neededBy": ["davis"],
+      "source": "mattpocock/skills",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/teach/SKILL.md"
+    },
+    "grill-me": {
+      "neededBy": ["izzy"],
+      "source": "mattpocock/skills",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/grill-me/SKILL.md"
+    },
+    "grilling": {
+      "neededBy": ["izzy"],
+      "source": "mattpocock/skills",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/grilling/SKILL.md"
+    },
+    "grill-with-docs": {
+      "neededBy": ["izzy"],
+      "source": "mattpocock/skills",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/grill-with-docs/SKILL.md"
+    }
+  },
+  "unresolved": {
+    "description": "Skills the crew references by name but which are NOT tracked in the store lock (~/.agents/.skill-lock.json), so no sourceUrl is known. They cannot be auto-fetched. Some are available as Claude Code plugin skills that must be installed via their plugin, not via git clone.",
+    "skills": {
+      "master-review": "Tai's default code-review skill. Not in the store lock — install via its plugin/marketplace.",
+      "code-review-skill": "Tai's language-specific review fallback. Not in the store lock.",
+      "frontend-design": "Sora's production component generator. Available as the `frontend-design` plugin skill; install via plugin, not git.",
+      "pr-review-toolkit:review-pr": "Tai's PR pipeline. Plugin-namespaced skill (pr-review-toolkit) — install the plugin."
+    }
+  }
+}

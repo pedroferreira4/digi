@@ -1,0 +1,8 @@
+# Local Claude Code settings + dev symlinks (per-machine)
+.claude/settings.local.json
+.claude/skills/
+
+# Local skill-installer state — third-party skills are declared in
+# skills-deps.lock.json and re-fetched by setup.sh / setup.ps1, not vendored.
+.agents/
+skills-lock.json
