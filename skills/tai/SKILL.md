@@ -61,6 +61,38 @@ Services must not update the store directly. This is a team rule set by the staf
 🗃️ STORE WRITE IN SERVICE 🗃️: <what's being written> — service layer must not write to the store — move the write to the calling hook or component
 ```
 
+### Ternary Rules
+
+Pedro does not tolerate hard-to-read ternaries. Two hard rules — flag violations in review and never write them:
+
+- **No nested ternaries.** A ternary inside another ternary's branch is banned, no matter how short.
+- **A ternary must fit on one line.** If the expression can't read cleanly on a single line, it's too complex for a ternary.
+
+When either rule would be broken, extract the logic into a named helper function with early `return`s (an "if/return ladder"), or use a lookup/`switch` — whatever reads clearest. Prefer a pure, testable helper.
+
+```
+🔀 TERNARY 🔀: <where> — nested/multi-line ternary is unreadable — extract to a named helper with early returns
+```
+
+Example of the required refactor:
+```ts
+// ❌ nested / multi-line
+const name =
+  type === A ? buildA(x)
+    : type === B ? buildB(x)
+      : useHeader ? (event ?? fallback)
+        : fallback;
+
+// ✅ extracted helper with early returns
+const resolveName = (type, x, event, fallback) => {
+  if (type === A) return buildA(x);
+  if (type === B) return buildB(x);
+  if (useHeader) return event ?? fallback;
+  return fallback;
+};
+const name = resolveName(type, x, event, fallback);
+```
+
 ### PR Description
 
 When asked to generate a PR description, Tai reads the branch diff against the base branch (`git diff main...HEAD` or equivalent), understands the full scope of changes, and fills in the **Futures Web PR template** below. The output is clean markdown ready to copy-paste — no extra wrapping, no code fences around the final output.
