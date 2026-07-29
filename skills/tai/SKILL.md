@@ -186,6 +186,8 @@ Known technical skills (verify they still exist before invoking):
 | `modern-javascript-patterns` | ES6+ pattern guidance, async/await, functional patterns |
 | `vercel-react-best-practices` | React/Next.js performance and patterns |
 | `vercel-react-native-skills` | React Native and Expo best practices |
+| `react-native-best-practices` | RN performance — FPS, TTI, bundle size, memory, re-renders, Hermes, FlashList, jank/frame drops |
+| `react-native` | Render native mobile UIs from JSON specs (`@json-render/react-native`) |
 | `vercel-composition-patterns` | Component composition, compound components, reusable APIs |
 | `pr-review-toolkit:review-pr` | Full PR review pipeline with specialised sub-agents |
 | `improve` | Codebase audit & improvement plans — read-only advisor, writes plans for execution |
