@@ -37,6 +37,12 @@ The shipped path is **copy**, which works cross-platform:
 
 Both installers read `profiles/<name>.txt` and copy only the listed skills into `~/.claude/skills/` (`%USERPROFILE%\.claude\skills` on Windows). Because it's a copy — not a symlink — Windows users don't need Developer Mode.
 
+### Personalization
+
+Every `SKILL.md` uses a `{{USER_NAME}}` placeholder instead of a hardcoded name — this repo is meant to be installed by anyone, not just the original author. Both installers prompt interactively for a name during install ("What's your name?") and substitute it into each *copied* `SKILL.md` after the copy step, so the repo's own source files stay templated. No extra tooling is required — both installers do the substitution with their own built-in string handling (pure Bash on macOS/Linux, `.Replace()` on PowerShell). If no name is given, the installer warns and leaves `{{USER_NAME}}` in place; re-running the installer fixes it.
+
+When writing or editing a persona's `SKILL.md`, use `{{USER_NAME}}` anywhere you'd otherwise write the user's name.
+
 ### Profiles
 
 Profiles let the same repo install different subsets on different machines. Each `profiles/<name>.txt` is plaintext, one skill-folder name per line, with `#` comments and blank lines ignored.
