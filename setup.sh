@@ -6,6 +6,10 @@
 # Omit it to install every agent (the "work" profile is the default).
 #   bash setup.sh            # full install (all agents)
 #   bash setup.sh personal   # install only the agents in profiles/personal.txt
+#
+# You'll be asked for your name during install — it replaces the
+# {{USER_NAME}} placeholder baked into each SKILL.md so the crew addresses
+# you, not the repo owner.
 
 set -e
 
@@ -43,6 +47,32 @@ if [ ! -f "$PROFILE_FILE" ]; then
   echo ""
   exit 1
 fi
+
+# ── Ask for the user's name ───────────────────────────────────────────────────
+# SKILL.md files ship with a {{USER_NAME}} placeholder instead of a hardcoded
+# name. We substitute it into each copied skill below so the crew addresses you
+# by name instead of the repo owner's.
+read -r -p "  What's your name? " USER_NAME
+if [ -z "$USER_NAME" ]; then
+  read -r -p "  Name can't be empty — what's your name? " USER_NAME
+fi
+if [ -z "$USER_NAME" ]; then
+  warn "No name provided — skills will keep the {{USER_NAME}} placeholder."
+  info "  Re-run this script and enter your name to personalize them."
+fi
+echo ""
+
+# Replace every {{USER_NAME}} in a file with $USER_NAME, preserving exact
+# trailing-newline behaviour (the trailing "x" sentinel survives the command
+# substitution that would otherwise eat trailing newlines).
+personalize_file() {
+  local file="$1"
+  local content
+  content="$(cat "$file"; printf x)"
+  content="${content%x}"
+  content="${content//'{{USER_NAME}}'/$USER_NAME}"
+  printf '%s' "$content" > "$file"
+}
 
 # ── Find the target skills directory ─────────────────────────────────────────
 CLAUDE_DIR="$HOME/.claude"
@@ -111,6 +141,11 @@ while IFS= read -r line || [ -n "$line" ]; do
 
   # Remove then copy — avoids the macOS cp -r nesting trap on re-runs
   if rm -rf "$target" && cp -r "$skill_dir" "$target" 2>/dev/null; then
+    # Personalize the copy: SKILL.md ships with a {{USER_NAME}} placeholder.
+    # Substituting after copy keeps the repo's own source files untouched.
+    if [ -n "$USER_NAME" ] && [ -f "$target/SKILL.md" ]; then
+      personalize_file "$target/SKILL.md"
+    fi
     ok "$skill_name"
     INSTALLED=$((INSTALLED + 1))
   else

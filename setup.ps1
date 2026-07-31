@@ -9,6 +9,10 @@
 
     Install method is COPY (same as setup.sh), so Windows users do NOT need
     symlinks or Developer Mode.
+
+    You'll be asked for your name during install — it replaces the
+    {{USER_NAME}} placeholder baked into each SKILL.md so the crew addresses
+    you, not the repo owner.
 #>
 
 [CmdletBinding()]
@@ -45,6 +49,21 @@ if (-not (Test-Path -LiteralPath $ProfileFile)) {
     Write-Host ""
     exit 1
 }
+
+# -- Ask for the user's name ----------------------------------------------------
+# SKILL.md files ship with a {{USER_NAME}} placeholder instead of a hardcoded
+# name. We substitute it into each copied skill below so the crew addresses you
+# by name instead of the repo owner's.
+$UserName = (Read-Host "  What's your name?").Trim()
+if ([string]::IsNullOrWhiteSpace($UserName)) {
+    $UserName = (Read-Host "  Name can't be empty - what's your name?").Trim()
+}
+if ([string]::IsNullOrWhiteSpace($UserName)) {
+    Write-Warn "No name provided - skills will keep the {{USER_NAME}} placeholder."
+    Write-Info "  Re-run this script and enter your name to personalize them."
+    $UserName = ""
+}
+Write-Host ""
 
 # -- Find / create the target skills directory ---------------------------------
 $ClaudeDir = Join-Path $env:USERPROFILE ".claude"
@@ -95,6 +114,16 @@ foreach ($rawLine in Get-Content -LiteralPath $ProfileFile) {
             Remove-Item -LiteralPath $target -Recurse -Force
         }
         Copy-Item -LiteralPath $skillDir -Destination $target -Recurse -Force
+
+        # Personalize the copy: SKILL.md ships with a {{USER_NAME}} placeholder.
+        # Substituting after copy keeps the repo's own source files untouched.
+        $targetSkillMd = Join-Path $target "SKILL.md"
+        if ($UserName -and (Test-Path -LiteralPath $targetSkillMd)) {
+            $content = Get-Content -LiteralPath $targetSkillMd -Raw
+            $content = $content.Replace("{{USER_NAME}}", $UserName)
+            Set-Content -LiteralPath $targetSkillMd -Value $content -NoNewline
+        }
+
         Write-Ok $skillName
         $Installed++
     } catch {
